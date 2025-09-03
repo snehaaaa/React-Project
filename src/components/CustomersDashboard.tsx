@@ -58,8 +58,8 @@ export default function CustomersDashboard() {
   }, [filtered, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-  const pageSafe = Math.min(page, totalPages);
-  const current = useMemo(() => sorted.slice((pageSafe - 1) * PAGE_SIZE, pageSafe * PAGE_SIZE), [sorted, pageSafe]);
+  const pageSize = Math.min(page, totalPages);
+  const current = useMemo(() => sorted.slice((pageSize - 1) * PAGE_SIZE, pageSize * PAGE_SIZE), [sorted, pageSize]);
 
   useEffect(() => { setPage(1); }, [query, sortBy]);
 
@@ -197,14 +197,14 @@ export default function CustomersDashboard() {
 
             {/* Footer */}
             <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-              <div>Showing data {sorted.length === 0 ? 0 : (pageSafe - 1) * PAGE_SIZE + 1} to {Math.min(pageSafe * PAGE_SIZE, sorted.length)} of {TOTAL_ENTRIES_DISPLAY.toLocaleString()} entries</div>
+              <div>Showing data {sorted.length === 0 ? 0 : (pageSize - 1) * PAGE_SIZE + 1} to {Math.min(pageSize * PAGE_SIZE, sorted.length)} of {TOTAL_ENTRIES_DISPLAY.toLocaleString()} entries</div>
 
               {/* Pagination */}
               <div className="flex items-center gap-1">
                 <button
                   className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1 disabled:opacity-40"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={pageSafe === 1}
+                  disabled={pageSize === 1}
                   aria-label="Previous page"
                 >
                   <ChevronLeft size={16} />
@@ -215,7 +215,7 @@ export default function CustomersDashboard() {
                       key={String(n)}
                       onClick={() => typeof n === "number" && setPage(n)}
                       className={`h-7 w-7 rounded-md text-center text-xs font-medium ${
-                        pageSafe === n ? "bg-indigo-600 text-white" : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50"
+                        pageSize === n ? "bg-indigo-600 text-white" : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50"
                       }`}
                     >
                       {n}
@@ -227,7 +227,7 @@ export default function CustomersDashboard() {
                 <button
                   className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1 disabled:opacity-40"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={pageSafe === totalPages}
+                  disabled={pageSize === totalPages}
                   aria-label="Next page"
                 >
                   <ChevronRight size={16} />
